@@ -6,17 +6,11 @@ export interface Subscribe {
     location: string,
     active: (r: any) => void,
 }
-export function getSocket(subs: Subscribe[], setIsReady: () => void) {
+export function getSocket(subs: Subscribe[]) {
     const Socket = new Client({
         webSocketFactory: () => {
             return new SockJS("http://localhost:8080/api/ws-stomp");
-        },
-        // beforeConnect: () => {
-        //     console.log("beforeConnect");
-        // },
-        // debug(str) {
-        //     console.log(`debug`, str);
-        // },        
+        },     
         onWebSocketError: () => {
             window.location.reload();
         },
@@ -27,7 +21,7 @@ export function getSocket(subs: Subscribe[], setIsReady: () => void) {
             subs.forEach(sub => {
                 Socket.subscribe(sub.location, (e) => sub.active(JSON.parse(e.body)));
             })
-            const interval = setInterval(() => { setIsReady(); clearInterval(interval); }, 100);
+            const interval = setInterval(() => {clearInterval(interval); }, 100);
         }
     });
     Socket.activate();
