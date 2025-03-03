@@ -25,7 +25,7 @@ export function getSocket(subs: Subscribe[], setIsReady: () => void) {
         heartbeatOutgoing: 4000,
         onConnect: () => {
             subs.forEach(sub => {
-                Socket.subscribe(sub.location, (e:any) => sub.active(JSON.parse(e.body)));
+                Socket.subscribe(sub.location, (e) => sub.active(JSON.parse(e.body)));
             })
             const interval = setInterval(() => { setIsReady(); clearInterval(interval); }, 100);
         }
