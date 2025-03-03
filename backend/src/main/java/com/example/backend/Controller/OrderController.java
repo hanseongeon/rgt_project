@@ -19,6 +19,7 @@ import java.util.List;
 public class OrderController {
     private final MultiService multiService;
 
+
     @PostMapping //주문접수
     public ResponseEntity<?> orderReceived(@RequestBody OrderRequestDTO orderRequestDTO) {
         try {
@@ -40,5 +41,4 @@ public class OrderController {
     public OrderResponseDTO realTimeOrder (OrderRequestDTO orderRequestDTO){
         return multiService.getDto(Order.builder().name(orderRequestDTO.name()).count(orderRequestDTO.count()).build());
     }
-
 }
