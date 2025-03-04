@@ -1,4 +1,6 @@
 package com.example.backend.DTO;
 
-public record OrderRequestDTO(String name, int count) {
+import java.time.LocalDateTime;
+
+public record OrderRequestDTO(String name, int count, LocalDateTime time) {
 }

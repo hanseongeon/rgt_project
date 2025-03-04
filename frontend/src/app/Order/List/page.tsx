@@ -1,7 +1,8 @@
 'use client'
 
 import { getSocket } from "@/app/API/SocketAPI";
-import { getOrder } from "@/app/API/UserAPI";
+import { changeOrder, deleteOrder, getOrder } from "@/app/API/UserAPI";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react"
 import SockJS from "sockjs-client";
 
@@ -11,6 +12,8 @@ export default function OrderList() {
         name: string;
         count: number;
         status: number;
+        time: Date;
+        index: number;
     }
 
     const [orderList, setOrderList] = useState<orderResponseDTO[]>([]);
@@ -20,13 +23,6 @@ export default function OrderList() {
         getOrder().then(r => { setOrderList(r); console.log(r); }).catch(e => console.log(e));
     }, [])
 
-<<<<<<< HEAD
-    // useEffect(() => {
-    //     getOrder().then(r => { setOrderList(r); console.log(r); }).catch(e => console.log(e));
-    // },[orderList])
-
-=======
->>>>>>> 6890ffde903d38e249c87ab19e6fad54e9ba49dd
     useEffect(() => {
         const newSocket = getSocket([]);
         newSocket.onConnect = () => {
@@ -36,6 +32,9 @@ export default function OrderList() {
         console.log("소켓연걸");
     }, [])
 
+    useEffect(() => {
+        console.log("오더리스트 바뀜",orderList);
+    },[orderList])
     // 소켓 구독 설정
     useEffect(() => {
         if (!socket) return; // socket이 초기화되지 않았다면 구독하지 않음
@@ -43,12 +42,13 @@ export default function OrderList() {
         console.log("소켓 구독 시작");
         socket.activate();
         const readSub = socket.subscribe("/api/sub/orderList", (e: any) => {
-            const newOrder: orderResponseDTO = JSON.parse(e.body);
+            const newOrder: orderResponseDTO = JSON.parse(e.body).body;
             console.log("neworder : ", newOrder);
-            // const newOrderList: orderResponseDTO[] = [...orderList,newOrder];
-            // setOrderList(newOrderList);
-            setOrderList((prevOrderList) => [...prevOrderList, newOrder])
-            console.log("orderList :", orderList);
+            console.log("뉴오더 추가 전 오더리스트: ",orderList);
+            // const newOrderList = [...orderList,newOrder];
+            // console.log("newOrderList:",newOrderList);
+            // setOrderList(newOrderList); 
+            setOrderList(prevOrderList => [...prevOrderList, newOrder]);
         });
 
         // 컴포넌트 언마운트 시 구독 해제
@@ -60,12 +60,12 @@ export default function OrderList() {
     }, [socket]); // socket이 변경될 때만 실행
 
     const status = (num:number) => {
-        if(num = 0){
+        if(num === 0){
             return   <td className="px-6 py-4">주문 접수 중</td>
-        }else if(num = 1 ){
+        }else if(num === 1 ){
             return   <td className="px-6 py-4">조리중</td>
         }else{
-            <td className="px-6 py-4">완료</td>
+            return <td className="px-6 py-4">완료</td>
         }
     }
 
@@ -79,6 +79,7 @@ export default function OrderList() {
                             <th scope="col" className="px-6 py-3">수량</th>
                             <th scope="col" className="px-6 py-3">주문시간</th>
                             <th scope="col" className="px-6 py-3">상태</th>
+                            <th scope="col" className="px-6 py-3">상태</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,9 +91,16 @@ export default function OrderList() {
                                 >
                                     <td className="px-6 py-4">{r.name}</td>
                                     <td className="px-6 py-4">{r.count}</td>
-                                    <td className="px-6 py-4">2025.03.04</td>
+                                    <td className="px-6 py-4">{dayjs(r.time?.toString()).format("YYYY-MM-DD HH:mm")}</td>
                                     {status(r.status)}
-                                    {r.status === 1 || r.status === 0 ? <td className="px-6 py-4">취소하기</td> : <></> }
+                                    {r.status === 0 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => {
+                                        changeOrder({index: r.index, status:1}).then(r => setOrderList(r)).catch(e => console.log(e));
+                                    }}>접수 하기</td> : r.status === 1 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => {
+                                        changeOrder({index: r.index, status:2}).then(r => setOrderList(r)).catch(e => console.log(e));
+                                    }}>조리 완료</td> : <></> }
+                                    {r.status === 0 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => deleteOrder(r.index).then(r => {
+                                        getOrder().then(r => setOrderList(r)).catch(e => console.log(e))
+                                    }).catch(e => console.log(e))} >취소하기</td> : <></> }
                                 </tr>
                             ))
                         ) : (
