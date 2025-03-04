@@ -19,7 +19,6 @@ import java.util.List;
 public class OrderController {
     private final MultiService multiService;
 
-
     @PostMapping //주문접수
     public ResponseEntity<?> orderReceived(@RequestBody OrderRequestDTO orderRequestDTO) {
         try {
@@ -36,9 +35,10 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDTOS);
     }
 
-    @MessageMapping("/api/orderList")
+    @MessageMapping("/orderList")
     @SendTo("/api/sub/orderList")
-    public OrderResponseDTO realTimeOrder (OrderRequestDTO orderRequestDTO){
-        return multiService.getDto(Order.builder().name(orderRequestDTO.name()).count(orderRequestDTO.count()).build());
+    public ResponseEntity<?> realTimeOrder (OrderRequestDTO orderRequestDTO){
+        OrderResponseDTO orderResponseDTO = multiService.getDto(Order.builder().name(orderRequestDTO.name()).count(orderRequestDTO.count()).build());
+        return ResponseEntity.status(HttpStatus.OK).body(orderResponseDTO);
     }
 }
