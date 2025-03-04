@@ -11,7 +11,7 @@ public class OrderRepository {
     private final List<Order> orderList = new ArrayList<>();
 
     public void save(String name, int count) {
-        Order order = Order.builder().name(name).count(count).build();
+        Order order = Order.builder().name(name).count(count).status(0).build();
         orderList.add(order);
     }
 
