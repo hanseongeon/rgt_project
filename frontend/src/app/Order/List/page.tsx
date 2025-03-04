@@ -20,10 +20,13 @@ export default function OrderList() {
         getOrder().then(r => { setOrderList(r); console.log(r); }).catch(e => console.log(e));
     }, [])
 
+<<<<<<< HEAD
     // useEffect(() => {
     //     getOrder().then(r => { setOrderList(r); console.log(r); }).catch(e => console.log(e));
     // },[orderList])
 
+=======
+>>>>>>> 6890ffde903d38e249c87ab19e6fad54e9ba49dd
     useEffect(() => {
         const newSocket = getSocket([]);
         newSocket.onConnect = () => {
