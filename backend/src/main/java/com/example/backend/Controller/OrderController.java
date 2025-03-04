@@ -41,5 +41,4 @@ public class OrderController {
         OrderResponseDTO orderResponseDTO = multiService.getDto(Order.builder().name(orderRequestDTO.name()).count(orderRequestDTO.count()).build());
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDTO);
     }
-
 }
