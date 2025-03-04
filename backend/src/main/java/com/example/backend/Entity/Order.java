@@ -8,10 +8,12 @@ import lombok.*;
 public class Order {
     String name;
     int count;
+    int status;
 
     @Builder
-    public Order(String name, int count){
+    public Order(String name, int count, int status){
         this.name = name;
         this.count = count;
+        this.status = status;
     }
 }
