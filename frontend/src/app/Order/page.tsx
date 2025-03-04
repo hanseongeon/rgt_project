@@ -13,6 +13,7 @@ export default function Order() {
   const [count, setCount] = useState<number>(0);
   const [error, setError] = useState<String>("");
   const [socket, setSocket] = useState(null as any);
+  const [time,setTime] = useState<Date>();
 
   useEffect(() => {
     const newSocket = getSocket([]);
@@ -33,15 +34,23 @@ export default function Order() {
 
   },[socket])
 
+  const getKoreanDate = (): Date => {
+    const date = new Date();
+    const offset = 9 * 60;
+    const koreanDate = new Date(date.getTime() + offset * 60 * 1000);
+    return koreanDate;
+};
+
+
   const send = (menu: String, count: number) => {
     if (menu.length == 0) {
       setError("메뉴를 입력해주세요")
     } else if (count <= 0) {
       setError("수량을 입력해주세요")
     } else {
-      sendOrder({ name: menu, count: Number(count) }).then(r => { alert("주문성공"); socket.publish({
+      sendOrder({ name: menu, count: Number(count), time :getKoreanDate()}).then(r => { alert("주문성공"); socket.publish({
         destination: "/api/pub/orderList",
-        body: JSON.stringify({name: menu, count: count })
+        body: JSON.stringify({name: menu, count: count, time: getKoreanDate(), status:0, index:r })
       }); console.log("주문보냄"); window.location.href = "/"; }).catch(e => console.log(e));
     }
   }
