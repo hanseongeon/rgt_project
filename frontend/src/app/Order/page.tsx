@@ -51,7 +51,7 @@ export default function Order() {
       sendOrder({ name: menu, count: Number(count), time :getKoreanDate()}).then(r => { alert("주문성공"); socket.publish({
         destination: "/api/pub/orderList",
         body: JSON.stringify({name: menu, count: count, time: getKoreanDate(), status:0, index:r })
-      }); console.log("주문보냄"); window.location.href = "/"; }).catch(e => console.log(e));
+      }); console.log("주문보냄"); window.location.href = "/"; }).catch(e => setError(e));
     }
   }
 
@@ -69,6 +69,10 @@ export default function Order() {
           }} />
         <button className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-full ml-24 " onClick={() => {send(menu, count)}}>주문하기</button>
       </div>
+      <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2
+         px-4 border border-blue-500 hover:border-transparent rounded mt-5" onClick={() => window.location.href = "/"}>
+                    메인페이지로
+                </button>
     </div>
   );
 }
