@@ -92,7 +92,7 @@ export default function OrderList() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={4} className="text-center py-4">
+                                <td colSpan={5} className="text-center py-4">
                                     주문 내역이 없습니다.
                                 </td>
                             </tr>

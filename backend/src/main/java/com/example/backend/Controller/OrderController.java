@@ -7,6 +7,7 @@ import com.example.backend.Entity.Order;
 import com.example.backend.Exceptions.DataNotSameException;
 import com.example.backend.Service.MultiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -22,6 +23,7 @@ public class OrderController {
     private final MultiService multiService;
 
     @PostMapping //주문접수
+    @CacheEvict(value = "orderList", allEntries = true)
     public ResponseEntity<?> orderReceived(@RequestBody OrderRequestDTO orderRequestDTO) {
         try {
         int index =   multiService.orderReceived(orderRequestDTO);
@@ -38,6 +40,7 @@ public class OrderController {
     }
 
     @PutMapping //주문 상태 변경
+    @CacheEvict(value = "orderList", allEntries = true)
     public ResponseEntity<?> changeStatus(@RequestBody OrderChangeRequestDTO orderChangeRequestDTO){
         try {
             List<OrderResponseDTO> orderResponseDTOS = multiService.changeStatus(orderChangeRequestDTO.index(), orderChangeRequestDTO.status());
@@ -48,6 +51,7 @@ public class OrderController {
     }
 
     @DeleteMapping
+    @CacheEvict(value = "orderList", allEntries = true)
     public ResponseEntity<?> deleteOrder(@RequestHeader int index){
         try{
             multiService.deleteOrder(index);
