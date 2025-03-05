@@ -20,7 +20,7 @@ export default function OrderList() {
     const [socket, setSocket] = useState(null as any);
 
     useEffect(() => {
-        getOrder().then(r => { setOrderList(r); console.log(r); }).catch(e => console.log(e));
+        getOrder().then(r => { setOrderList(r); }).catch(e => console.log(e));
     }, [])
 
     useEffect(() => {
@@ -28,14 +28,11 @@ export default function OrderList() {
         newSocket.onConnect = () => {
             setSocket(newSocket);
         }
-        console.log("소켓연걸");
     }, [])
 
     // 소켓 구독 설정
     useEffect(() => {
         if (!socket) return; // socket이 초기화되지 않았다면 구독하지 않음
-
-        console.log("소켓 구독 시작");
         socket.activate();
         const readSub = socket.subscribe("/api/sub/orderList", (e: any) => {
             const newOrder: orderResponseDTO = JSON.parse(e.body).body;
@@ -44,7 +41,6 @@ export default function OrderList() {
 
         // 컴포넌트 언마운트 시 구독 해제
         return () => {
-            console.log("소켓 구독 해제");
             readSub.unsubscribe();
             socket.deactivate();
         };
@@ -70,7 +66,7 @@ export default function OrderList() {
                             <th scope="col" className="px-6 py-3">수량</th>
                             <th scope="col" className="px-6 py-3">주문시간</th>
                             <th scope="col" className="px-6 py-3">상태</th>
-                            <th scope="col" className="px-6 py-3">상태</th>
+                            <th scope="col" className="px-6 py-3 text-center" colSpan={2}>결정</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,7 +81,6 @@ export default function OrderList() {
                                     <td className="px-6 py-4">{dayjs(r.time?.toString()).format("YYYY-MM-DD HH:mm")}</td>
                                     {status(r.status)}
                                     {r.status === 0 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => {
-                                        console.log("인덱스 값:", r.index);
                                         changeOrder({ index: r.index, status: 1 }).then(r => setOrderList(r)).catch(e => console.log(e));
                                     }}>접수 하기</td> : r.status === 1 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => {
                                         changeOrder({ index: r.index, status: 2 }).then(r => setOrderList(r)).catch(e => console.log(e));
