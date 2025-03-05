@@ -4,6 +4,7 @@ import com.example.backend.DTO.OrderChangeRequestDTO;
 import com.example.backend.DTO.OrderRequestDTO;
 import com.example.backend.DTO.OrderResponseDTO;
 import com.example.backend.Entity.Order;
+import com.example.backend.Exceptions.DataNotSameException;
 import com.example.backend.Service.MultiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,14 +39,22 @@ public class OrderController {
 
     @PutMapping //주문 상태 변경
     public ResponseEntity<?> changeStatus(@RequestBody OrderChangeRequestDTO orderChangeRequestDTO){
-        List<OrderResponseDTO> orderResponseDTOS =  multiService.changeStatus(orderChangeRequestDTO.index(),orderChangeRequestDTO.status());
-        return ResponseEntity.status(HttpStatus.OK).body(orderResponseDTOS);
+        try {
+            List<OrderResponseDTO> orderResponseDTOS = multiService.changeStatus(orderChangeRequestDTO.index(), orderChangeRequestDTO.status());
+            return ResponseEntity.status(HttpStatus.OK).body(orderResponseDTOS);
+        }catch (DataNotSameException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteOrder(@RequestHeader int index){
-        multiService.deleteOrder(index);
-        return ResponseEntity.status(HttpStatus.OK).body("delete");
+        try{
+            multiService.deleteOrder(index);
+            return ResponseEntity.status(HttpStatus.OK).body("delete");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @MessageMapping("/orderList")

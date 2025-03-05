@@ -1,6 +1,7 @@
 package com.example.backend.Repository;
 
 import com.example.backend.Entity.Order;
+import com.example.backend.Exceptions.DataNotSameException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -25,12 +26,20 @@ public class OrderRepository {
 
     public List<Order> chnageStatus(int index,int status) {
         Order order = orderList.get(index);
-        order.setStatus(status);
-        orderList.set(index,order);
-        return orderList;
+        if(order == null){
+            throw new DataNotSameException("해당 주문이 없습니다,");
+        }
+            order.setStatus(status);
+            orderList.set(index,order);
+            return orderList;
+
+
     }
 
     public void deleteOrder(int index){
+        if(index < 0 || index >= orderList.size()) {
+            throw new IllegalArgumentException("해당 주문이 없습니다.");
+        }
         orderList.remove(index);
     }
 }
