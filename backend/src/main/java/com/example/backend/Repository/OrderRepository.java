@@ -40,6 +40,13 @@ public class OrderRepository {
         if(index < 0 || index >= orderList.size()) {
             throw new IllegalArgumentException("해당 주문이 없습니다.");
         }
+        for(Order order : orderList){
+            if(order.getIndex() > index){
+                int newIndex = order.getIndex();
+                order.setIndex(newIndex - 1 );
+                orderList.set(newIndex,order);
+            }
+        }
         orderList.remove(index);
     }
 }
