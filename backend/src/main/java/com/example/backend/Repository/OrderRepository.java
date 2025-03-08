@@ -14,6 +14,9 @@ public class OrderRepository {
     private final List<Order> orderList = new ArrayList<>();
     private int index = -1;
     public int save(String name, int count, LocalDateTime time) {
+        if(orderList.isEmpty()){
+            index = -1;
+        }
         index++;
         Order order = Order.builder().name(name).count(count).status(0).time(time).index(index).build();
         orderList.add(order);
@@ -37,7 +40,7 @@ public class OrderRepository {
     }
 
     public void deleteOrder(int index){
-        if(index < 0 || index >= orderList.size()) {
+        if(index < 0) {
             throw new IllegalArgumentException("해당 주문이 없습니다.");
         }
         for(Order order : orderList){
