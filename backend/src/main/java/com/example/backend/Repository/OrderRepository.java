@@ -13,43 +13,42 @@ import java.util.List;
 public class OrderRepository {
     private final List<Order> orderList = new ArrayList<>();
     private int index = -1;
+
     public int save(String name, int count, LocalDateTime time) {
-        if(orderList.isEmpty()){
+        if (orderList.isEmpty()) {
             index = -1;
         }
-        index++;
+        ++index;
         Order order = Order.builder().name(name).count(count).status(0).time(time).index(index).build();
         orderList.add(order);
         return index;
     }
 
-    public List<Order> getOrder(){
+    public List<Order> getOrder() {
         return orderList;
     }
 
-    public List<Order> chnageStatus(int index,int status) {
+    public List<Order> chnageStatus(int index, int status) {
         Order order = orderList.get(index);
-        if(order == null){
+        if (order == null) {
             throw new DataNotSameException("해당 주문이 없습니다,");
         }
-            order.setStatus(status);
-            orderList.set(index,order);
-            return orderList;
+        order.setStatus(status);
+        orderList.set(index, order);
+        return orderList;
 
 
     }
 
-    public void deleteOrder(int index){
-        if(index < 0) {
+    public void deleteOrder(int index1) {
+        if (index1 < 0) {
             throw new IllegalArgumentException("해당 주문이 없습니다.");
         }
-        for(Order order : orderList){
-            if(order.getIndex() > index){
-                int newIndex = order.getIndex();
-                order.setIndex(newIndex - 1 );
-                orderList.set(newIndex,order);
-            }
+        Order order = orderList.get(index1);
+        orderList.remove(order);
+        for (int i = 0; i < orderList.size(); i++) {
+            orderList.get(i).setIndex(i);
         }
-        orderList.remove(index);
+        index = orderList.size() - 1;
     }
 }
