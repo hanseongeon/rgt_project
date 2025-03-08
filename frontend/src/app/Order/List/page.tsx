@@ -81,12 +81,12 @@ export default function OrderList() {
                                     <td className="px-6 py-4">{dayjs(r.time?.toString()).format("YYYY-MM-DD HH:mm")}</td>
                                     {status(r.status)}
                                     {r.status === 0 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => {
-                                        changeOrder({ index: r.index, status: 1 }).then(r => setOrderList(r)).catch(e => console.log(e));
+                                        changeOrder({ index: r.index, status: 1 }).then(_ => setOrderList(_)).catch(e => console.log(e));
                                     }}>접수 하기</td> : r.status === 1 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => {
-                                        changeOrder({ index: r.index, status: 2 }).then(r => setOrderList(r)).catch(e => console.log(e));
+                                        changeOrder({ index: r.index, status: 2 }).then(_ => setOrderList(_)).catch(e => console.log(e));
                                     }}>조리 완료</td> : <></>}
-                                    {r.status === 0 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => deleteOrder(r.index).then(r => {
-                                        getOrder().then(r => setOrderList(r)).catch(e => console.log(e))
+                                    {r.status === 0 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => deleteOrder(r.index).then(_ => {
+                                        getOrder().then(_ => setOrderList(_)).catch(e => console.log(e))
                                     }).catch(e => console.log(e))} >취소하기</td> : <></>}
                                 </tr>
                             ))
