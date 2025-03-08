@@ -3,13 +3,13 @@ import { getAPI } from './AxiosAPI';
 export const UserApi = getAPI();
 
 interface orderRequsetDTO{
-    name: String;
-    count: Number;
+    name: string;
+    count: number;
     time: Date;
   }
 
   interface orderResponseDTO{
-    name : String;
+    name : string;
     count: number;
   }
 

@@ -6,12 +6,12 @@ import { getSocket } from "../API/SocketAPI";
 
 export default function Order() {
   interface orderRequsetDTO {
-    name: String;
-    count: Number;
+    name: string;
+    count: number;
   }
-  const [menu, setMenu] = useState<String>("");
+  const [menu, setMenu] = useState<string>("");
   const [count, setCount] = useState<number>(0);
-  const [error, setError] = useState<String>("");
+  const [error, setError] = useState<string>("");
   const [socket, setSocket] = useState(null as any);
   const [time,setTime] = useState<Date>();
 
@@ -42,7 +42,7 @@ export default function Order() {
 };
 
 
-  const send = (menu: String, count: number) => {
+  const send = (menu: string, count: number) => {
     if (menu.length == 0) {
       setError("메뉴를 입력해주세요")
     } else if (count <= 0) {
