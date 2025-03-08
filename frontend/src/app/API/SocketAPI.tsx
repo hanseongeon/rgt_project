@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 
 export interface Subscribe {
     location: string,
-    active: (r: any) => void,
+    active: (r: string) => void,
 }
 export function getSocket(subs: Subscribe[]) {
     const Socket = new Client({
