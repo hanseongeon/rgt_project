@@ -5,6 +5,7 @@ import com.example.backend.DTO.OrderResponseDTO;
 import com.example.backend.Entity.Order;
 import com.example.backend.Service.Module.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class MultiService {
         }
       return   orderService.orderReceived(orderRequestDTO.name(), orderRequestDTO.count(), formatDate(orderRequestDTO.time()));
     }
-    @Cacheable("orderList") // 추후 redis 사용해볼 예정
+    @CachePut(value = "orderList") // 추후 redis 사용해볼 예정
     public List<OrderResponseDTO> getOrder() {
         List<Order> orderList = orderService.getOrder();
         return orderList.stream().map(this::getDto).toList();
