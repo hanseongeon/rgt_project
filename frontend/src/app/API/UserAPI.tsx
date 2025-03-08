@@ -6,6 +6,8 @@ interface orderRequsetDTO{
     name: string;
     count: number;
     time: Date;
+    count: number;
+    time: Date;
   }
 
   interface orderChangeRequestDTO{
