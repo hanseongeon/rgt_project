@@ -2,7 +2,7 @@
 
 import { getSocket } from "@/app/API/SocketAPI";
 import { changeOrder, deleteOrder, getOrder } from "@/app/API/UserAPI";
-import { Client } from "@stomp/stompjs";
+import { Client, Frame } from "@stomp/stompjs";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react"
 
@@ -34,7 +34,7 @@ export default function OrderList() {
     useEffect(() => {
         if (!socket) return; // socket이 초기화되지 않았다면 구독하지 않음
         socket.activate();
-        const readSub = socket.subscribe("/api/sub/orderList", (e: any) => {
+        const readSub = socket.subscribe("/api/sub/orderList", (e: Frame) => {
             const newOrder: orderResponseDTO = JSON.parse(e.body).body;
             setOrderList(prevOrderList => [...prevOrderList, newOrder]); //항상 최신 orderList 가져오기
         });
@@ -85,7 +85,7 @@ export default function OrderList() {
                                     }}>접수 하기</td> : r.status === 1 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => {
                                         changeOrder({ index: r.index, status: 2 }).then(_ => setOrderList(_)).catch(e => console.log(e));
                                     }}>조리 완료</td> : <></>}
-                                    {r.status === 0 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => deleteOrder(r.index).then(_ => {
+                                    {r.status === 0 ? <td className="px-6 py-4 cursor-pointer hover:text-red-300" onClick={() => deleteOrder(r.index).then(() => {
                                         getOrder().then(_ => setOrderList(_)).catch(e => console.log(e))
                                     }).catch(e => console.log(e))} >취소하기</td> : <></>}
                                 </tr>
