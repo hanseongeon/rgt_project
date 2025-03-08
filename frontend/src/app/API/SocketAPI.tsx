@@ -9,7 +9,7 @@ export interface Subscribe {
 export function getSocket(subs: Subscribe[]) {
     const Socket = new Client({
         webSocketFactory: () => {
-            return new SockJS("http://localhost:8080/api/ws-stomp");
+            return new SockJS("http://13.125.86.24/api/ws-stomp");
         },     
         onWebSocketError: () => {
             window.location.reload();
