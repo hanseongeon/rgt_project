@@ -1,19 +1,16 @@
 'use client'
-import { use, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { sendOrder } from "../API/UserAPI";
 import { getSocket } from "../API/SocketAPI";
+import { Client } from "@stomp/stompjs";
 
 
 export default function Order() {
-  interface orderRequsetDTO {
-    name: string;
-    count: number;
-  }
+
   const [menu, setMenu] = useState<string>("");
   const [count, setCount] = useState<number>(0);
   const [error, setError] = useState<string>("");
-  const [socket, setSocket] = useState(null as any);
-  const [time,setTime] = useState<Date>();
+  const [socket, setSocket] = useState<Client | null>(null);
 
   useEffect(() => {
     const newSocket = getSocket([]);
@@ -48,7 +45,7 @@ export default function Order() {
     } else if (count <= 0) {
       setError("수량을 입력해주세요")
     } else {
-      sendOrder({ name: menu, count: Number(count), time :getKoreanDate()}).then(r => { alert("주문성공"); socket.publish({
+      sendOrder({ name: menu, count: Number(count), time :getKoreanDate()}).then(r => { alert("주문성공"); socket?.publish({
         destination: "/api/pub/orderList",
         body: JSON.stringify({name: menu, count: count, time: getKoreanDate(), status:0, index:r })
       }); console.log("주문보냄"); window.location.href = "/"; }).catch(e => setError(e));
