@@ -15,7 +15,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
         registry.addEndpoint("/api/ws-stomp") //
-                .setAllowedOriginPatterns("http://localhost:3000") //
+                .setAllowedOriginPatterns("https://rgtproject2.vercel.app","https://rgtproject2.vercel.app") //
                 .withSockJS();
     }
 
