@@ -2,9 +2,9 @@
 
 import { getSocket } from "@/app/API/SocketAPI";
 import { changeOrder, deleteOrder, getOrder } from "@/app/API/UserAPI";
+import { Client } from "@stomp/stompjs";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react"
-import SockJS from "sockjs-client";
 
 export default function OrderList() {
 
@@ -17,10 +17,10 @@ export default function OrderList() {
     }
 
     const [orderList, setOrderList] = useState<orderResponseDTO[]>([]);
-    const [socket, setSocket] = useState(null as any);
+    const [socket, setSocket] = useState<Client | null>(null);
 
     useEffect(() => {
-        getOrder().then(r => { setOrderList(r); }).catch(e => console.log(e));
+        getOrder().then(_ => { setOrderList(_); }).catch(e => console.log(e));
     }, [])
 
     useEffect(() => {
